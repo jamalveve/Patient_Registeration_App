@@ -11,12 +11,12 @@ function RegistrationForm({ onSuccess }) {
  const navigate = useNavigate();
 
 
- // Initialize PGlite and create users table
+ // Initialize PGlite and create patients table
  useEffect(() => {
    const initDb = async () => {
-     const dbInstance = new PGlite('idb://user-db', { persist: true });
+     const dbInstance = new PGlite('idb://patients-db', { persist: true });
      await dbInstance.query(`
-       CREATE TABLE IF NOT EXISTS users (
+       CREATE TABLE IF NOT EXISTS patients (
          id SERIAL PRIMARY KEY,
          username TEXT UNIQUE NOT NULL,
          password TEXT NOT NULL
@@ -34,7 +34,7 @@ function RegistrationForm({ onSuccess }) {
 
 
    // Check if username exists
-   const { rows } = await db.query('SELECT * FROM users WHERE username = $1', [username]);
+   const { rows } = await db.query('SELECT * FROM patients WHERE username = $1', [username]);
    if (rows.length > 0) {
      alert('Username already exists. Please choose another.');
      return;
@@ -42,7 +42,7 @@ function RegistrationForm({ onSuccess }) {
 
 
    // Insert new user
-   await db.query('INSERT INTO users (username, password) VALUES ($1, $2)', [username, password]);
+   await db.query('INSERT INTO patients (username, password) VALUES ($1, $2)', [username, password]);
 
 
    alert('Registration successful!');

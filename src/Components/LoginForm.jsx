@@ -10,13 +10,14 @@ function LoginForm({ onLoginSuccess }) {
  const navigate = useNavigate();
 
 
- // Initialize PGlite and connect to users table
+ // Initialize PGlite and connect to patient table
  useEffect(() => {
    const initDb = async () => {
-     const dbInstance = new PGlite('idb://user-db', { persist: true });
+     const dbInstance = new PGlite('idb://patients-db', { persist: true });
      // Table should already exist from registration, but safe to ensure
      await dbInstance.query(`
-       CREATE TABLE IF NOT EXISTS users (
+       CREATE TABLE IF NOT EXISTS patients (
+
          id SERIAL PRIMARY KEY,
          username TEXT UNIQUE NOT NULL,
          password TEXT NOT NULL
@@ -35,7 +36,7 @@ function LoginForm({ onLoginSuccess }) {
 
    // Query for user with matching username and password
    const { rows } = await db.query(
-     'SELECT * FROM users WHERE username = $1 AND password = $2',
+     'SELECT * FROM patients WHERE username = $1 AND password = $2',
      [username, password]
    );
 
