@@ -5,7 +5,7 @@ import { useState } from 'react';
 import PatientDetails from './Components/PatientDetails';     
 import RegisterationForm from './Components/RegisterationForm';
 import Home from './Components/Layout/Home';
-import About from './Components/Layout/About';
+import ServiceAnalytics from './Components/Layout/Services';
 import EmergencyContact from './Components/Layout/Contact';
 export default function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(
@@ -50,7 +50,7 @@ export default function App() {
       >
         <Route index element={<Navigate to="patients" replace />} />
         <Route path="patients" element={<PatientDetails />} />
-        <Route path="about" element={<About />} />
+        <Route path="about" element={<ServiceAnalytics />} />
         <Route path="emergency" element={<EmergencyContact />} />
       </Route>
       <Route

@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { PGlite } from '@electric-sql/pglite';
 
-
 export default function UserList() {
  const [patients, setPatients] = useState([]);
-
 
  useEffect(() => {
    const fetchPatients = async () => {
@@ -14,7 +12,6 @@ export default function UserList() {
    };
    fetchPatients();
  }, []);
-
 
  return (
    <div>

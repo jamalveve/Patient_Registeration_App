@@ -37,8 +37,8 @@ export default function LoginForm({ onLoginSuccess }) {
    );
    if (rows.length > 0) {
      if (onLoginSuccess) onLoginSuccess(rows[0]);
-     navigate("/home/patients");
-   } else {
+ // Pass name to the next route using state
+    navigate("/home/patients", { state: { name } });   } else {
      alert("Invalid username or password.");
    }
  };
@@ -138,6 +138,8 @@ export default function LoginForm({ onLoginSuccess }) {
        </div>
        {/* Right: Illustration */}
        <div className="w-full md:w-1/2 flex flex-col items-center justify-center bg-[#f7f5f2] py-12 px-8">
+        <p className="text-2xl font-bold text-[#37875b] bg-[#e6f4ee] rounded-xl px-6 py-3 mb-8 mt-4 text-center tracking-wide shadow">
+  Patient Registration App</p>
         <img
          src={loginIllustration}
          alt="Login Illustration"

@@ -37,8 +37,7 @@ function SQLQueryPanel() {
   };
 
   return (
-    <div className="p-4 bg-gray-50 rounded">
-      <form onSubmit={handleQuery}>
+<div className="w-full max-w-5xl bg-white rounded-3xl shadow-2xl overflow-hidden mb-8 p-6">      <form onSubmit={handleQuery}>
         <textarea
           value={sql}
           onChange={e => setSql(e.target.value)}
