@@ -98,7 +98,7 @@ export default function PatientDetails() {
      const db = new PGlite("idb://patients-db", { persist: true });
      await db.query(`
        CREATE TABLE IF NOT EXISTS patient_full_details (
-         id SERIAL PRIMARY KEY,
+         id SERIAL PRIMARY KEY ,
          name TEXT, maiden TEXT, address TEXT, city TEXT, state TEXT, zip TEXT,
          dob TEXT, ssn TEXT, phone TEXT, email TEXT, occupation TEXT, employer TEXT,
          maritalStatus TEXT, spouse TEXT, spouseMaiden TEXT, emergencyContact TEXT,

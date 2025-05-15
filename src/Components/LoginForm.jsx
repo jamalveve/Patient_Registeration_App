@@ -142,9 +142,7 @@ export default function LoginForm({ onLoginSuccess }) {
          src={loginIllustration}
          alt="Login Illustration"
          className="max-w-xl w-full h-auto object-contain"
-
-
-        />
+          />
        </div>
      </div>
    </div>
