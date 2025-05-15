@@ -28,7 +28,7 @@ export default function App() {
         path="/login"
         element={
           isAuthenticated
-            ? <Navigate to="/home/patients" replace />  // Fixed path
+            ? <Navigate to="/home/patients" replace />  
             : <LoginForm onLoginSuccess={handleLoginSuccess} />
         }
       />
@@ -36,7 +36,7 @@ export default function App() {
         path="/register"
         element={
           isAuthenticated
-            ? <Navigate to="/home/patients" replace />  // Fixed path
+            ? <Navigate to="/home/patients" replace /> 
             : <RegisterationForm />
         }
       />

@@ -29,7 +29,7 @@ function SQLQueryPanel() {
     setResult(null);
     if (!db) return;
     try {
-      const res = await db.query(sql); // Executes any SQL the user enters[3].
+      const res = await db.query(sql); 
       setResult(res.rows);
     } catch (err) {
       setError(err.message);

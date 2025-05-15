@@ -103,6 +103,3 @@ function RegisterationForm({ onSuccess }) {
 export default RegisterationForm;
 
 
-
-
-

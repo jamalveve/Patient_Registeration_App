@@ -4,7 +4,7 @@ export default function Home({ onLogout }) {
  return (
    <div>
      {/* Header with navigation */}
-     <header className="bg-green-800 text-white p-4 flex justify-between items-center">
+     <header className="bg-[#37875b] text-white p-4 flex justify-between items-center">
        <h1 className="text-2xl font-bold">Patient Register App</h1>
        <nav>
          <Link to="patients" className="mx-2 hover:underline">Patient Details</Link>
