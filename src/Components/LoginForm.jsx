@@ -1,23 +1,22 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { PGlite } from '@electric-sql/pglite';
+
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { PGlite } from "@electric-sql/pglite";
+import loginIllustration from '../assets/Illustration_green.svg'
 
 
-function LoginForm({ onLoginSuccess }) {
- const [username, setUsername] = useState('');
- const [password, setPassword] = useState('');
+export default function LoginForm({ onLoginSuccess }) {
+ const [username, setUsername] = useState("");
+ const [password, setPassword] = useState("");
  const [db, setDb] = useState(null);
  const navigate = useNavigate();
 
 
- // Initialize PGlite and connect to patient table
  useEffect(() => {
    const initDb = async () => {
-     const dbInstance = new PGlite('idb://patients-db', { persist: true });
-     // Table should already exist from registration, but safe to ensure
+     const dbInstance = new PGlite("idb://patients-db", { persist: true });
      await dbInstance.query(`
        CREATE TABLE IF NOT EXISTS patients (
-
          id SERIAL PRIMARY KEY,
          username TEXT UNIQUE NOT NULL,
          password TEXT NOT NULL
@@ -32,84 +31,124 @@ function LoginForm({ onLoginSuccess }) {
  const handleLogin = async (e) => {
    e.preventDefault();
    if (!db) return;
-
-
-   // Query for user with matching username and password
    const { rows } = await db.query(
-     'SELECT * FROM patients WHERE username = $1 AND password = $2',
+     "SELECT * FROM patients WHERE username = $1 AND password = $2",
      [username, password]
    );
-
-
    if (rows.length > 0) {
-     alert('Login successful!');
      if (onLoginSuccess) onLoginSuccess(rows[0]);
-     // Redirect or set login state as needed
-     // Example: navigate('/dashboard');
+     navigate("/home/patients");
    } else {
-     alert('Invalid username or password.');
+     alert("Invalid username or password.");
    }
  };
 
 
- const handleRegisterRedirect = () => {
-   navigate('/register');
- };
+ const handleRegisterRedirect = () => navigate("/register");
 
 
  return (
-<div className="flex items-center justify-center min-h-screen w-full bg-gradient-to-br from-green-100 to-purple-200">      <form onSubmit={handleLogin} className="w-85 max-w-md bg-white rounded-3xl shadow-2xl p-8">
-       <h2 className="text-2xl font-bold text-green-600 mb-6 text-center">Login</h2>
-       <div className="mb-4">
-         <label className="block text-gray-700 font-semibold mb-2">
-           Username:
-           <input
-             type="text"
-             value={username}
-             onChange={e => setUsername(e.target.value)}
-             className="mt-1 block w-full rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-400"
-             placeholder="Enter your username"
-             required
-           />
-         </label>
+   <div className="min-h-screen flex items-center justify-center bg-[#8db89e] px-2">
+     <div className="w-full max-w-5xl bg-[#f7f5f2] rounded-3xl shadow-2xl flex flex-col md:flex-row items-center overflow-hidden">
+       {/* Left: Login Form */}
+       <div className="w-full md:w-1/2 flex flex-col items-center py-12 px-8">
+         <form onSubmit={handleLogin} className="w-full max-w-sm">
+           <h2 className="text-3xl font-bold text-center mb-2">Sign in</h2>
+           <p className="text-gray-500 text-center mb-8">
+             Hey, Enter your details to login to your account
+           </p>
+           <div className="mb-5">
+             <input
+               type="text"
+               value={username}
+               onChange={e => setUsername(e.target.value)}
+               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#b8dbc8] bg-[#f9f9f9] font-medium"
+               placeholder="Enter Email / Phone No"
+               required
+             />
+           </div>
+           <div className="mb-2 relative">
+             <input
+               type="password"
+               value={password}
+               onChange={e => setPassword(e.target.value)}
+               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#b8dbc8] bg-[#f9f9f9] font-medium"
+               placeholder="Passcode"
+               required
+             />
+             {/* need add a show/hide password toggle here*/}
+           </div>
+           <div className="mb-4 flex justify-between text-xs text-gray-500">
+             <span>
+               Don't have an account?{" "}
+               <button
+                 type="button"
+                 onClick={handleRegisterRedirect}
+                 className="text-green-700 font-semibold hover:underline"
+               >
+                 Register now!
+               </button>
+             </span>
+           </div>
+           <button
+             type="submit"
+             className="w-full bg-[#8db89e] hover:bg-[#6f967b] text-white font-bold py-3 rounded-lg transition mb-4"
+           >
+             Sign in
+           </button>
+           <div className="flex items-center my-4">
+             <div className="flex-grow border-t border-gray-300"></div>
+             <span className="mx-2 text-gray-400 text-sm">Or Sign in with</span>
+             <div className="flex-grow border-t border-gray-300"></div>
+           </div>
+           <div className="flex justify-between gap-2">
+             <button
+               type="button"
+               className="flex-1 flex items-center justify-center border border-gray-300 rounded-lg py-2 hover:bg-gray-100"
+             >
+               <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" className="w-5 h-5 mr-2" />
+               Google
+             </button>
+             <button
+               type="button"
+               className="flex-1 flex items-center justify-center border border-gray-300 rounded-lg py-2 hover:bg-gray-100"
+             >
+               <img src="https://www.svgrepo.com/show/452245/apple.svg" alt="Apple" className="w-5 h-5 mr-2" />
+               Apple ID
+             </button>
+             <button
+               type="button"
+               className="flex-1 flex items-center justify-center border border-gray-300 rounded-lg py-2 hover:bg-gray-100"
+             >
+               <img src="https://www.svgrepo.com/show/475700/facebook-color.svg" alt="Facebook" className="w-5 h-5 mr-2" />
+               Facebook
+             </button>
+           </div>
+           <div className="mt-4 text-center text-xs text-gray-500">
+             Don't have an account?{" "}
+             <button
+               type="button"
+               onClick={handleRegisterRedirect}
+               className="text-green-700 font-semibold hover:underline"
+             >
+               Register Now
+             </button>
+           </div>
+         </form>
        </div>
-       <div className="mb-6">
-         <label className="block text-gray-700 font-semibold mb-2">
-           Password:
-           <input
-             type="password"
-             value={password}
-             onChange={e => setPassword(e.target.value)}
-             className="mt-1 block w-full rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-400"
-             placeholder="Enter your password"
-             required
-           />
-         </label>
+       {/* Right: Illustration */}
+       <div className="w-full md:w-1/2 flex flex-col items-center justify-center bg-[#f7f5f2] py-12 px-8">
+        <img
+         src={loginIllustration}
+         alt="Login Illustration"
+         className="max-w-xl w-full h-auto object-contain"
+
+
+        />
        </div>
-       <button
-         type="submit"
-         className="w-full bg-green-600 text-white py-2 rounded-full font-bold hover:bg-green-700 transition"
-       >
-         Login
-       </button>
-       <p className="mt-4 text-center">
-         <button
-           type="button"
-           onClick={handleRegisterRedirect}
-           className="text-green-600 hover:underline"
-         >
-           Back to register
-         </button>
-       </p>
-     </form>
+     </div>
    </div>
  );
 }
-
-
-export default LoginForm;
-
-
-
 
 
