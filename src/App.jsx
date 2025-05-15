@@ -1,61 +1,62 @@
-import { useState, useEffect } from 'react';
-import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
-import RegistrationForm from './Components/RegisterationForm';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import LoginForm from './Components/LoginForm';
-import UserList from './Components/PatientList';
-import SQLQueryPanel from './Components/SQLQueryPannel';
-import ProtectedRoute from './Components/protectedRoute';
+import ProtectedRoute from './Components/ProtectedRoute';      
+import { useState } from 'react';
+import PatientDetails from './Components/PatientDetails';     
+import RegisterationForm from './Components/RegisterationForm';
+import Home from './Components/Layout/Home';
+import About from './Components/Layout/About';
+import EmergencyContact from './Components/Layout/Contact';
 export default function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(
     !!localStorage.getItem("isAuthenticated")
   );
 
-  // When login is successful, set auth state and persist it
   const handleLoginSuccess = () => {
     setIsAuthenticated(true);
     localStorage.setItem("isAuthenticated", "true");
   };
 
-  // When logging out, clear auth state
   const handleLogout = () => {
     setIsAuthenticated(false);
     localStorage.removeItem("isAuthenticated");
   };
 
   return (
-    <div>
-      <Routes>
-        <Route
-          path="/login"
-          element={
-            isAuthenticated
-              ? <Navigate to="/home" replace />
-              : <LoginForm onLoginSuccess={handleLoginSuccess} />
-          }
-        />
-        <Route
-          path="/register"
-          element={
-            isAuthenticated
-              ? <Navigate to="/home" replace />
-              : <RegistrationForm />
-          }
-        />
-        <Route
-          path="/home"
-          element={
-            <ProtectedRoute isAuthenticated={isAuthenticated}>
-              <UserList />
-              <SQLQueryPanel />
-              <button onClick={handleLogout} className="mt-4 bg-red-500 text-white px-4 py-2 rounded">Logout</button>
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="*"
-          element={<Navigate to={isAuthenticated ? "/home" : "/login"} replace />}
-        />
-      </Routes>
-    </div>
+    <Routes>
+      <Route
+        path="/login"
+        element={
+          isAuthenticated
+            ? <Navigate to="/home/patients" replace />  // Fixed path
+            : <LoginForm onLoginSuccess={handleLoginSuccess} />
+        }
+      />
+      <Route
+        path="/register"
+        element={
+          isAuthenticated
+            ? <Navigate to="/home/patients" replace />  // Fixed path
+            : <RegisterationForm />
+        }
+      />
+      <Route
+        path="/home"
+        element={
+          <ProtectedRoute isAuthenticated={isAuthenticated}>
+            <Home onLogout={handleLogout} />
+          </ProtectedRoute>
+        }
+      >
+        <Route index element={<Navigate to="patients" replace />} />
+        <Route path="patients" element={<PatientDetails />} />
+        <Route path="about" element={<About />} />
+        <Route path="emergency" element={<EmergencyContact />} />
+      </Route>
+      <Route
+        path="*"
+        element={<Navigate to={isAuthenticated ? "/home/patients" : "/login"} replace />}
+      />
+    </Routes>
   );
 }

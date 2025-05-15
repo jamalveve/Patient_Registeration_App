@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { PGlite } from '@electric-sql/pglite';
 
 
-function RegistrationForm({ onSuccess }) {
+function RegisterationForm({ onSuccess }) {
  const [username, setUsername] = useState('');
  const [password, setPassword] = useState('');
  const [db, setDb] = useState(null);
@@ -100,7 +100,7 @@ function RegistrationForm({ onSuccess }) {
 }
 
 
-export default RegistrationForm;
+export default RegisterationForm;
 
 
 
