@@ -8,6 +8,7 @@ import PodcastsIcon from '@mui/icons-material/Podcasts';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import SettingsIcon from '@mui/icons-material/Settings';
 import LogoutIcon from '@mui/icons-material/Logout';
+import Logo from '../../assets/patient.png';
 
 export default function Home({ onLogout }) {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -20,8 +21,15 @@ export default function Home({ onLogout }) {
     <div className="min-h-screen bg-[#1a2250] flex flex-col">
       {/* Header */}
       <header className="bg-[#37875b] text-white p-4 flex justify-between items-center relative">
-        <h1 className="text-2xl font-bold">Patient Register App</h1>
-
+       <div className="flex items-center">
+  <img
+    src={Logo}
+    alt="App Logo"
+    className="h-12 w-12 mr-3 rounded-full object-cover bg-white"
+    style={{ boxShadow: '0 2px 8px rgba(0,0,0,0.06)' }}
+  />
+  <h1 className="text-2xl font-bold">Patient Register App</h1>
+</div>
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center">
           <Link to="patients" className="mx-2 hover:underline">Patient Details</Link>

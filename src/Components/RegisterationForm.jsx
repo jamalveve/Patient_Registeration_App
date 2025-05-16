@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import loginIllustration from '../assets/illustration_green.svg';
 import { Eye, EyeOff } from "lucide-react";
 import { getUsersDb } from "./UserDb";
+import Logo from '../assets/patient.png'
+
 
 export default function RegistrationForm({ onSuccess }) {
   const [username, setUsername] = useState("");
@@ -159,13 +161,22 @@ export default function RegistrationForm({ onSuccess }) {
         </div>
 
         {/* Right: Illustration */}
-        <div className="w-full md:w-1/2 flex flex-col items-center justify-center bg-[#f7f5f2] py-12 px-8">
-          <img
-            src={loginIllustration}
-            alt="Login Illustration"
-            className="max-w-xl w-full h-auto object-contain"
-          />
-        </div>
+       {/* Right: Illustration */}
+       <div className="w-full md:w-1/2 flex flex-col items-center justify-center bg-[#f7f5f2] py-12 px-8">
+               <img
+                   src={Logo}
+                   alt="App Logo"
+                   className="h-12 w-12   mr-3 rounded-full object-cover bg-white"
+                   style={{ boxShadow: '0 2px 8px rgba(0,0,0,0.06)' }}
+                 />
+                 <p className="text-2xl font-bold text-[#37875b] bg-[#e6f4ee] rounded-xl px-6 py-3 mb-8 mt-4 text-center tracking-wide shadow">
+                   Patient Registration App</p>
+                 <img
+                   src={loginIllustration}
+                   alt="Login Illustration"
+                   className="max-w-xl w-full h-auto object-contain"
+                 />
+               </div>
       </div>
     </div>
   );
