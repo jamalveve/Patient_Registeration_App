@@ -339,13 +339,13 @@ export default function PatientDetails() {
                 </div>
                 <div>
                   <Label htmlFor="maritalStatus" isMandatory={isMandatory("maritalStatus")}>Marital Status:</Label>
-                  <input
-                    name="maritalStatus"
-                    value={form.maritalStatus}
-                    onChange={handleChange}
-                    className="inputStyle"
-                    required={isMandatory("maritalStatus")}
-                  />
+                  <select name="maritalStatus" value={form.maritalStatus} onChange={handleChange} className="border p-2 w-full" required>
+                    <option value="">Select</option>
+                    <option>Married</option>
+                    <option>Single</option>
+                    <option>Divorced</option>
+                    <option>Widowed</option>
+                  </select>
                 </div>
                 <div>
                   <Label htmlFor="spouse" isMandatory={isMandatory("spouse")}>Spouse:</Label>

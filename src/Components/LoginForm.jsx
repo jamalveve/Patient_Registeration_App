@@ -26,6 +26,17 @@ export default function LoginForm({ onLoginSuccess }) {
   const handleLogin = async (e) => {
     e.preventDefault();
     if (!db) return;
+
+    // First, check if the user exists
+  const userQuery = await db.query(
+    "SELECT * FROM Users WHERE username = $1",
+    [username]
+  );
+
+  if (userQuery.rows.length === 0) {
+    alert("User does not exist.");
+    return;
+  }
     const { rows } = await db.query(
       "SELECT * FROM Users WHERE username = $1 AND password = $2",
       [username, password]
