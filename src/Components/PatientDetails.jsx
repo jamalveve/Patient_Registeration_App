@@ -549,7 +549,7 @@ export default function PatientDetails() {
                 <button
                   type="button"
                   onClick={handlePrev}
-                  className="btnStyle border border-[#37875b] text-[#37875b] hover:bg-[#37875b] hover:text-white"
+                  className="btnStyle bg-[#6495ED] hover:bg-[#417fd6] text-white px-4 py-2 rounded shadow hover:text-white"
                 >
                   Previous
                 </button>

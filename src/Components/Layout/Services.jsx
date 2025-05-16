@@ -101,8 +101,8 @@ export default function ServiceAnalytics() {
           <button
             key={tab}
             className={`py-2 px-4 text-sm font-medium transition-all duration-200 ${activeTab === tab
-                ? "text-[#6495ED] border-b-2 border-[#6495ED] bg-white rounded-t-lg shadow"
-                : "text-gray-500 hover:text-[#37875b]"
+              ? "text-[#6495ED] border-b-2 border-[#6495ED] bg-white rounded-t-lg shadow"
+              : "text-gray-500 hover:text-[#37875b]"
               }`}
             onClick={() => setActiveTab(tab)}
           >
@@ -121,7 +121,7 @@ export default function ServiceAnalytics() {
             <option>Last Year</option>
           </select>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
           {analyticsData.map((item) => (
             <div
               key={item.label}
