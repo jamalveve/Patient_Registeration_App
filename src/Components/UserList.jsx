@@ -15,7 +15,7 @@ export default function UserList() {
 
  return (
    <div>
-     <h3>Registered Patients</h3>
+     <h3>Registered User</h3>
      <ul>
        {patients.map((user, idx) => (
          <li key={idx}>{user.username}</li>

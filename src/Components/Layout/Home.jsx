@@ -35,20 +35,7 @@ export default function Home({ onLogout }) {
             title="Call"
             aria-label="Call"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-7 w-7 text-white hover:text-green-200 transition"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth={2}
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M15.05 5.05a7 7 0 013.95 3.95m.5 4.5v3a2 2 0 01-2 2 16 16 0 01-7-2.93 16 16 0 01-5.07-5.07 2 2 0 012-2h3a1 1 0 011 0.76l1 3a1 1 0 01-.23 1.09l-1.27 1.27a12.07 12.07 0 005.07 5.07l1.27-1.27a1 1 0 011.09-.23l3 1a1 1 0 01.76 1z"
-              />
-            </svg>
+            <CallIcon style={{ fontSize: 28, color: "white" }} className="hover:text-green-200 transition" />
           </a>
           <button className="flex flex-col items-center justify-center bg-white rounded-full w-12 h-12 shadow text-red-700"
             onClick={() => {
@@ -109,11 +96,11 @@ export default function Home({ onLogout }) {
                   <HomeIcon fontSize="medium" />
                   Home
                 </Link>
-                <Link to="profile" className="flex items-center gap-3 py-3 px-4 rounded-lg hover:bg-white/20 transition" onClick={handleMenuLinkClick}>
+                <Link to="about" className="flex items-center gap-3 py-3 px-4 rounded-lg hover:bg-white/20 transition" onClick={handleMenuLinkClick}>
                   <PersonIcon fontSize="medium" />
                   Services
                 </Link>
-                <Link to="podcast" className="flex items-center gap-3 py-3 px-4 rounded-lg hover:bg-white/20 transition" onClick={handleMenuLinkClick}>
+                <Link to="emergency" className="flex items-center gap-3 py-3 px-4 rounded-lg hover:bg-white/20 transition" onClick={handleMenuLinkClick}>
                   <PodcastsIcon fontSize="medium" />
                   Contact
                 </Link>
@@ -126,7 +113,7 @@ export default function Home({ onLogout }) {
                   Settings
                 </Link>
                 <button
-                className="flex items-center gap-3 py-3 px-4 rounded-lg text-red-800 hover:text-white hover:bg-white/20 transition mt-2"
+                  className="flex items-center gap-3 py-3 px-4 rounded-lg text-orange-200 hover:text-white hover:bg-white/20 transition mt-2"
                   onClick={() => {
                     setMenuOpen(false);
                     onLogout();

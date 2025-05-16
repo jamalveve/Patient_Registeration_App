@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { PGlite } from "@electric-sql/pglite";
-import UserList from "./PatientList";
 import SQLQueryPanel from "./SQLQueryPannel";
+import '../index.css'
 
 const initialForm = {
   // Patient Information
@@ -53,6 +53,41 @@ const tabTitles = [
 
 const LOCAL_STORAGE_KEY = "patientDetailsForm";
 
+// Define the mandatory fields:
+const mandatoryFields = [
+  "name",
+  "address",
+  "city",
+  "state",
+  "zip",
+  "dob",
+  "phone",
+  "email",
+  "maritalStatus",
+  "emergencyContact",
+  "emergencyRelationship",
+  "emergencyPhone",
+  "insuranceCompany",
+  "insuranceId",
+  "plan",
+  "group",
+  "policyHolder",
+  "policyHolderDob",
+  "policyHolderRelationship",
+  "reasonForVisit",
+  "medicalProblems",
+  "medications",
+  "allergies",
+];
+
+function Label({ htmlFor, children, isMandatory }) {
+  return (
+    <label className="block text-sm font-medium mb-1" htmlFor={htmlFor}>
+      {children} {isMandatory && <span className="text-red-600">*</span>}
+    </label>
+  );
+}
+
 export default function PatientDetails() {
   // Restore form from localStorage if present
   const [form, setForm] = useState(() => {
@@ -77,13 +112,15 @@ export default function PatientDetails() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setMessage("");
-    //  check all fields are filled
-    for (let key in form) {
+
+    // Validate only mandatory fields
+    for (let key of mandatoryFields) {
       if (!form[key]) {
-        setMessage("Please fill all fields before submitting.");
+        setMessage("Please fill all mandatory fields before submitting.");
         return;
       }
     }
+
     try {
       const db = new PGlite("idb://patients-db", { persist: true });
       await db.query(`
@@ -121,16 +158,17 @@ export default function PatientDetails() {
     }
   };
 
-  return (
+  // Helper to decide if a field is mandatory
+  const isMandatory = (fieldName) => mandatoryFields.includes(fieldName);
 
-    
+  return (
     <div className="min-h-screen bg-[#1a2250] flex flex-col items-center py-10 px-2">
       <div className="w-full max-w-5xl mb-8 text-center">
-  <h1 className="text-3xl md:text-4xl font-bold text-white mb-2">Patient Registration</h1>
-  <p className="text-blue-100 text-lg">
-    Please fill out the following form to register a new patient. All information is kept confidential and secure.
-  </p>
-</div>
+        <h1 className="text-3xl md:text-4xl font-bold text-white mb-2">Patient Registration</h1>
+        <p className="text-blue-100 text-lg">
+          Please fill out the following form to register a new patient. All information is kept confidential and secure.
+        </p>
+      </div>
       {/* Card */}
       <div className="w-full max-w-5xl bg-white rounded-3xl shadow-2xl overflow-hidden mb-8">
         {/* Colored Top Bar */}
@@ -142,22 +180,20 @@ export default function PatientDetails() {
               <React.Fragment key={step}>
                 <div className="flex flex-col items-center">
                   <div
-                    className={`w-9 h-9 flex items-center justify-center rounded-full border-2 shadow ${
-                      tab === idx
+                    className={`w-9 h-9 flex items-center justify-center rounded-full border-2 shadow ${tab === idx
                         ? "bg-[#37875b] border-[#37875b] text-white"
                         : tab > idx
-                        ? "bg-[#6495ED] border-[#6495ED] text-white"
-                        : "bg-white border-gray-400 text-gray-500"
-                    } font-bold text-lg transition`}
+                          ? "bg-[#6495ED] border-[#6495ED] text-white"
+                          : "bg-white border-gray-400 text-gray-500"
+                      } font-bold text-lg transition`}
                   >
                     {step}
                   </div>
                 </div>
                 {step < 3 && (
                   <div
-                    className={`w-16 h-1 ${
-                      tab >= idx + 1 ? "bg-[#6495ED]" : "bg-gray-300"
-                    }`}
+                    className={`w-16 h-1 ${tab >= idx + 1 ? "bg-[#6495ED]" : "bg-gray-300"
+                      }`}
                   ></div>
                 )}
               </React.Fragment>
@@ -174,200 +210,342 @@ export default function PatientDetails() {
             {tab === 0 && (
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
-                  <label className="block text-sm font-medium mb-1">Name (Last, First, Middle):</label>
-                  <input name="name" value={form.name} onChange={handleChange} className="inputStyle" required />
+                  <Label htmlFor="name" isMandatory={isMandatory("name")}>Name (Last, First, Middle):</Label>
+                  <input
+                    name="name"
+                    value={form.name}
+                    onChange={handleChange}
+                    className="inputStyle"
+                    required={isMandatory("name")}
+                  />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-1">Maiden:</label>
+                  <Label htmlFor="maiden" isMandatory={isMandatory("maiden")}>Maiden:</Label>
                   <input name="maiden" value={form.maiden} onChange={handleChange} className="inputStyle" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-1">Address:</label>
-                  <input name="address" value={form.address} onChange={handleChange} className="inputStyle" required />
+                  <Label htmlFor="address" isMandatory={isMandatory("address")}>Address:</Label>
+                  <input
+                    name="address"
+                    value={form.address}
+                    onChange={handleChange}
+                    className="inputStyle"
+                    required={isMandatory("address")}
+                  />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-1">City:</label>
-                  <input name="city" value={form.city} onChange={handleChange} className="inputStyle" required />
+                  <Label htmlFor="city" isMandatory={isMandatory("city")}>City:</Label>
+                  <input
+                    name="city"
+                    value={form.city}
+                    onChange={handleChange}
+                    className="inputStyle"
+                    required={isMandatory("city")}
+                  />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-1">State:</label>
-                  <input name="state" value={form.state} onChange={handleChange} className="inputStyle" required />
+                  <Label htmlFor="state" isMandatory={isMandatory("state")}>State:</Label>
+                  <input
+                    name="state"
+                    value={form.state}
+                    onChange={handleChange}
+                    className="inputStyle"
+                    required={isMandatory("state")}
+                  />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-1">Zip:</label>
-                  <input name="zip" value={form.zip} onChange={handleChange} className="inputStyle" required />
+                  <Label htmlFor="zip" isMandatory={isMandatory("zip")}>Zip:</Label>
+                  <input
+                    name="zip"
+                    value={form.zip}
+                    onChange={handleChange}
+                    className="inputStyle"
+                    required={isMandatory("zip")}
+                  />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-1">DOB:</label>
-                  <input name="dob" type="date" value={form.dob} onChange={handleChange} className="inputStyle" required />
+                  <Label htmlFor="dob" isMandatory={isMandatory("dob")}>Date of Birth:</Label>
+                  <input
+                    type="date"
+                    name="dob"
+                    value={form.dob}
+                    onChange={handleChange}
+                    className="inputStyle"
+                    required={isMandatory("dob")}
+                  />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-1">SSN:</label>
+                  <Label htmlFor="ssn" isMandatory={isMandatory("ssn")}>SSN:</Label>
                   <input name="ssn" value={form.ssn} onChange={handleChange} className="inputStyle" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-1">Phone:</label>
-                  <input name="phone" value={form.phone} onChange={handleChange} className="inputStyle" required />
+                  <Label htmlFor="phone" isMandatory={isMandatory("phone")}>Phone Number:</Label>
+                  <input
+                    name="phone"
+                    value={form.phone}
+                    onChange={handleChange}
+                    className="inputStyle"
+                    required={isMandatory("phone")}
+                  />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-1">Email:</label>
-                  <input name="email" type="email" value={form.email} onChange={handleChange} className="inputStyle" required />
+                  <Label htmlFor="email" isMandatory={isMandatory("email")}>Email:</Label>
+                  <input
+                    type="email"
+                    name="email"
+                    value={form.email}
+                    onChange={handleChange}
+                    className="inputStyle"
+                    required={isMandatory("email")}
+                  />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-1">Occupation:</label>
+                  <Label htmlFor="occupation" isMandatory={isMandatory("occupation")}>Occupation:</Label>
                   <input name="occupation" value={form.occupation} onChange={handleChange} className="inputStyle" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-1">Employer:</label>
+                  <Label htmlFor="employer" isMandatory={isMandatory("employer")}>Employer:</Label>
                   <input name="employer" value={form.employer} onChange={handleChange} className="inputStyle" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-1">Marital Status:</label>
-                  <select name="maritalStatus" value={form.maritalStatus} onChange={handleChange} className="inputStyle" required>
-                    <option value="">Select</option>
-                    <option>Married</option>
-                    <option>Single</option>
-                    <option>Divorced</option>
-                    <option>Widowed</option>
-                  </select>
+                  <Label htmlFor="maritalStatus" isMandatory={isMandatory("maritalStatus")}>Marital Status:</Label>
+                  <input
+                    name="maritalStatus"
+                    value={form.maritalStatus}
+                    onChange={handleChange}
+                    className="inputStyle"
+                    required={isMandatory("maritalStatus")}
+                  />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-1">Spouse (Last, First, Middle):</label>
+                  <Label htmlFor="spouse" isMandatory={isMandatory("spouse")}>Spouse:</Label>
                   <input name="spouse" value={form.spouse} onChange={handleChange} className="inputStyle" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-1">Spouse Maiden:</label>
+                  <Label htmlFor="spouseMaiden" isMandatory={isMandatory("spouseMaiden")}>Spouse Maiden:</Label>
                   <input name="spouseMaiden" value={form.spouseMaiden} onChange={handleChange} className="inputStyle" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-1">Emergency Contact:</label>
-                  <input name="emergencyContact" value={form.emergencyContact} onChange={handleChange} className="inputStyle" required />
+                  <Label htmlFor="emergencyContact" isMandatory={isMandatory("emergencyContact")}>Emergency Contact:</Label>
+                  <input
+                    name="emergencyContact"
+                    value={form.emergencyContact}
+                    onChange={handleChange}
+                    className="inputStyle"
+                    required={isMandatory("emergencyContact")}
+                  />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-1">Relationship:</label>
-                  <input name="emergencyRelationship" value={form.emergencyRelationship} onChange={handleChange} className="inputStyle" required />
+                  <Label htmlFor="emergencyRelationship" isMandatory={isMandatory("emergencyRelationship")}>Emergency Relationship:</Label>
+                  <input
+                    name="emergencyRelationship"
+                    value={form.emergencyRelationship}
+                    onChange={handleChange}
+                    className="inputStyle"
+                    required={isMandatory("emergencyRelationship")}
+                  />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-1">Emergency Phone:</label>
-                  <input name="emergencyPhone" value={form.emergencyPhone} onChange={handleChange} className="inputStyle" required />
+                  <Label htmlFor="emergencyPhone" isMandatory={isMandatory("emergencyPhone")}>Emergency Phone:</Label>
+                  <input
+                    name="emergencyPhone"
+                    value={form.emergencyPhone}
+                    onChange={handleChange}
+                    className="inputStyle"
+                    required={isMandatory("emergencyPhone")}
+                  />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-1">Parent/Legal Guardian:</label>
+                  <Label htmlFor="parentGuardian" isMandatory={isMandatory("parentGuardian")}>Parent/Guardian:</Label>
                   <input name="parentGuardian" value={form.parentGuardian} onChange={handleChange} className="inputStyle" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-1">Parent/Guardian Phone:</label>
+                  <Label htmlFor="parentGuardianPhone" isMandatory={isMandatory("parentGuardianPhone")}>Parent/Guardian Phone:</Label>
                   <input name="parentGuardianPhone" value={form.parentGuardianPhone} onChange={handleChange} className="inputStyle" />
                 </div>
               </div>
             )}
+
             {/* Tab 1: Insurance Information */}
             {tab === 1 && (
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
-                  <label className="block text-sm font-medium mb-1">Insurance Company:</label>
-                  <input name="insuranceCompany" value={form.insuranceCompany} onChange={handleChange} className="inputStyle" required />
+                  <Label htmlFor="insuranceCompany" isMandatory={isMandatory("insuranceCompany")}>Insurance Company:</Label>
+                  <input
+                    name="insuranceCompany"
+                    value={form.insuranceCompany}
+                    onChange={handleChange}
+                    className="inputStyle"
+                    required={isMandatory("insuranceCompany")}
+                  />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-1">ID#:</label>
-                  <input name="insuranceId" value={form.insuranceId} onChange={handleChange} className="inputStyle" required />
+                  <Label htmlFor="insuranceId" isMandatory={isMandatory("insuranceId")}>Insurance ID:</Label>
+                  <input
+                    name="insuranceId"
+                    value={form.insuranceId}
+                    onChange={handleChange}
+                    className="inputStyle"
+                    required={isMandatory("insuranceId")}
+                  />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-1">Plan:</label>
-                  <input name="plan" value={form.plan} onChange={handleChange} className="inputStyle" required />
+                  <Label htmlFor="plan" isMandatory={isMandatory("plan")}>Plan:</Label>
+                  <input
+                    name="plan"
+                    value={form.plan}
+                    onChange={handleChange}
+                    className="inputStyle"
+                    required={isMandatory("plan")}
+                  />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-1">Group:</label>
-                  <input name="group" value={form.group} onChange={handleChange} className="inputStyle" required />
+                  <Label htmlFor="group" isMandatory={isMandatory("group")}>Group:</Label>
+                  <input
+                    name="group"
+                    value={form.group}
+                    onChange={handleChange}
+                    className="inputStyle"
+                    required={isMandatory("group")}
+                  />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-1">Policy Holder's Name:</label>
-                  <input name="policyHolder" value={form.policyHolder} onChange={handleChange} className="inputStyle" required />
+                  <Label htmlFor="policyHolder" isMandatory={isMandatory("policyHolder")}>Policy Holder:</Label>
+                  <input
+                    name="policyHolder"
+                    value={form.policyHolder}
+                    onChange={handleChange}
+                    className="inputStyle"
+                    required={isMandatory("policyHolder")}
+                  />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-1">Policy Holder's DOB:</label>
-                  <input name="policyHolderDob" type="date" value={form.policyHolderDob} onChange={handleChange} className="inputStyle" required />
+                  <Label htmlFor="policyHolderDob" isMandatory={isMandatory("policyHolderDob")}>Policy Holder DOB:</Label>
+                  <input
+                    type="date"
+                    name="policyHolderDob"
+                    value={form.policyHolderDob}
+                    onChange={handleChange}
+                    className="inputStyle"
+                    required={isMandatory("policyHolderDob")}
+                  />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-1">Policy Holder's Employer:</label>
+                  <Label htmlFor="policyHolderEmployer" isMandatory={isMandatory("policyHolderEmployer")}>Policy Holder Employer:</Label>
                   <input name="policyHolderEmployer" value={form.policyHolderEmployer} onChange={handleChange} className="inputStyle" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-1">Relationship to Patient:</label>
-                  <input name="policyHolderRelationship" value={form.policyHolderRelationship} onChange={handleChange} className="inputStyle" required />
+                  <Label htmlFor="policyHolderRelationship" isMandatory={isMandatory("policyHolderRelationship")}>Policy Holder Relationship:</Label>
+                  <input
+                    name="policyHolderRelationship"
+                    value={form.policyHolderRelationship}
+                    onChange={handleChange}
+                    className="inputStyle"
+                    required={isMandatory("policyHolderRelationship")}
+                  />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-1">Primary Care Physician:</label>
+                  <Label htmlFor="primaryCarePhysician" isMandatory={isMandatory("primaryCarePhysician")}>Primary Care Physician:</Label>
                   <input name="primaryCarePhysician" value={form.primaryCarePhysician} onChange={handleChange} className="inputStyle" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-1">PCP Phone:</label>
+                  <Label htmlFor="pcpPhone" isMandatory={isMandatory("pcpPhone")}>PCP Phone:</Label>
                   <input name="pcpPhone" value={form.pcpPhone} onChange={handleChange} className="inputStyle" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-1">Preferred Pharmacy:</label>
+                  <Label htmlFor="preferredPharmacy" isMandatory={isMandatory("preferredPharmacy")}>Preferred Pharmacy:</Label>
                   <input name="preferredPharmacy" value={form.preferredPharmacy} onChange={handleChange} className="inputStyle" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-1">Pharmacy Phone:</label>
+                  <Label htmlFor="pharmacyPhone" isMandatory={isMandatory("pharmacyPhone")}>Pharmacy Phone:</Label>
                   <input name="pharmacyPhone" value={form.pharmacyPhone} onChange={handleChange} className="inputStyle" />
                 </div>
               </div>
             )}
+
             {/* Tab 2: Medical History */}
             {tab === 2 && (
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-sm font-medium mb-1">Reason for Visit:</label>
-                  <input name="reasonForVisit" value={form.reasonForVisit} onChange={handleChange} className="inputStyle" required />
+                  <Label htmlFor="reasonForVisit" isMandatory={isMandatory("reasonForVisit")}>Reason for Visit:</Label>
+                  <textarea
+                    name="reasonForVisit"
+                    value={form.reasonForVisit}
+                    onChange={handleChange}
+                    rows={3}
+                    className="inputStyle resize-none"
+                    required={isMandatory("reasonForVisit")}
+                  />
                 </div>
-                <div className="md:col-span-3">
-                  <label className="block text-sm font-medium mb-1">Current/Past Medical Problems and Dates:</label>
-                  <textarea name="medicalProblems" value={form.medicalProblems} onChange={handleChange} className="inputStyle" required />
+                <div>
+                  <Label htmlFor="medicalProblems" isMandatory={isMandatory("medicalProblems")}>Medical Problems:</Label>
+                  <textarea
+                    name="medicalProblems"
+                    value={form.medicalProblems}
+                    onChange={handleChange}
+                    rows={3}
+                    className="inputStyle resize-none"
+                    required={isMandatory("medicalProblems")}
+                  />
                 </div>
-                <div className="md:col-span-3">
-                  <label className="block text-sm font-medium mb-1">Current Medications, Dosage, Duration:</label>
-                  <textarea name="medications" value={form.medications} onChange={handleChange} className="inputStyle" required />
+                <div>
+                  <Label htmlFor="medications" isMandatory={isMandatory("medications")}>Medications:</Label>
+                  <textarea
+                    name="medications"
+                    value={form.medications}
+                    onChange={handleChange}
+                    rows={3}
+                    className="inputStyle resize-none"
+                    required={isMandatory("medications")}
+                  />
                 </div>
-                <div className="md:col-span-3">
-                  <label className="block text-sm font-medium mb-1">Allergies to Medications:</label>
-                  <textarea name="allergies" value={form.allergies} onChange={handleChange} className="inputStyle" required />
+                <div>
+                  <Label htmlFor="allergies" isMandatory={isMandatory("allergies")}>Allergies:</Label>
+                  <textarea
+                    name="allergies"
+                    value={form.allergies}
+                    onChange={handleChange}
+                    rows={3}
+                    className="inputStyle resize-none"
+                    required={isMandatory("allergies")}
+                  />
                 </div>
               </div>
             )}
-            {/* Navigation Buttons */}
-            <div className="flex justify-between mt-4">
-              {tab > 0 && (
-                <button type="button" onClick={handlePrev} className="bg-gray-400 text-white px-4 py-2 rounded shadow">
+
+            {/* Buttons */}
+            <div className="flex justify-between mt-10">
+              {tab > 0 ? (
+                <button
+                  type="button"
+                  onClick={handlePrev}
+                  className="btnStyle border border-[#37875b] text-[#37875b] hover:bg-[#37875b] hover:text-white"
+                >
                   Previous
                 </button>
+              ) : (
+                <div />
               )}
-              {tab < 2 && (
-                <button type="button" onClick={handleNext} className="bg-[#6495ED] hover:bg-[#417fd6] text-white px-4 py-2 rounded shadow ml-auto font-semibold">
+              {tab < tabTitles.length - 1 ? (
+                <button type="button"
+                  onClick={handleNext}
+                  className="bg-[#6495ED] hover:bg-[#417fd6] text-white px-4 py-2 rounded shadow ml-auto font-semibold">
+
                   Next
                 </button>
-              )}
-              {tab === 2 && (
+              ) : (
                 <button type="submit" className="bg-[#37875b] hover:bg-[#276245] text-white px-4 py-2 rounded shadow ml-auto font-semibold">
+
                   Submit
                 </button>
               )}
             </div>
-            {message && <div className="mt-2 text-center text-red-600">{message}</div>}
+            {message && <p className="mt-6 text-center text-red-600 font-semibold">{message}</p>}
           </form>
         </div>
       </div>
-      {/* SQL Query Panel */}
       {/* <UserList /> */}
       <SQLQueryPanel />
-      {/* Tailwind extra style for input */}
-      <style>
-        {`
-          .inputStyle {
-            @apply w-full px-4 py-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#6495ED] transition"
-          }
-        `}
-      </style>
     </div>
   );
 }

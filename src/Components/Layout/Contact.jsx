@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+// import Emergency from  '.../assets/sos_emergency_'
 
 // Dummy data 
 const patientData = [
@@ -55,12 +56,24 @@ export default function EmergencyContactSection() {
               Need to reach a patient's emergency contact or their assigned doctor? Use the search on the right to quickly find and connect!
             </p>
             <div className="bg-white bg-opacity-10 border border-white/20 rounded-2xl px-6 py-4 mt-10 mx-auto max-w-sm shadow-lg flex flex-col items-center">
-              <img
-                src="https://cdn-icons-png.flaticon.com/512/484/484167.png"
-                alt="Emergency"
-                className="w-10 h-10 mb-2"
-              />
-              <div className="italic text-sm text-white mb-1">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="40"
+                height="40"
+                viewBox="0 0 40 40"
+                fill="none"
+              >
+                <circle cx="20" cy="20" r="18" fill="#E53935" stroke="#B71C1C" />
+                <g>
+                  <rect x="17" y="10" width="6" height="14" rx="3" fill="#fff" />
+                  <rect x="17" y="26" width="6" height="4" rx="2" fill="#fff" />
+                </g>
+                <circle cx="20" cy="20" r="18" fill="none" stroke="#B71C1C" />
+              </svg>
+
+
+
+              <div className="italic text-sm text-black mb-1">
                 “Fast, reliable, and secure emergency contact access for our staff.”
               </div>
               <div className="text-xs text-white/70">- Hospital Admin</div>
