@@ -86,11 +86,12 @@ export default function ServiceAnalytics() {
 
       await db.exec(`
         CREATE TABLE IF NOT EXISTS users (
-          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          id SERIAL PRIMARY KEY,
           name TEXT NOT NULL,
           created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         );
       `);
+      
 
       // If location.state.name is available, use it and also insert to DB
       if (location.state?.name) {
