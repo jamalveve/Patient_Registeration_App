@@ -1,13 +1,13 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 import LoginForm from './Components/LoginForm';
-import ProtectedRoute from './Components/ProtectedRoute';      
 import { useState } from 'react';
 import PatientDetails from './Components/PatientDetails';     
 import RegisterationForm from './Components/RegisterationForm';
 import Home from './Components/Layout/Home';
 import ServiceAnalytics from './Components/Layout/Services';
 import EmergencyContact from './Components/Layout/Contact';
-export default function App() {
+import ProtectedRoute from './Components/ProtectedRoute';
+export default function App() { 
   const [isAuthenticated, setIsAuthenticated] = useState(
     !!localStorage.getItem("isAuthenticated")
   );

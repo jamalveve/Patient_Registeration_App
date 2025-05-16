@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { PGlite } from "@electric-sql/pglite";
-import loginIllustration from '../assets/Illustration_green.svg';
+import loginIllustration from '../assets/illustration_green.svg';
 
 
 export default function RegistrationForm({ onSuccess }) {
