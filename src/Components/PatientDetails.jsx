@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { PGlite } from "@electric-sql/pglite";
 import SQLQueryPanel from "./SQLQueryPannel";
 import '../index.css'
+import { getPatientsDb } from "./PatientsDb";
 
 const initialForm = {
   // Patient Information
@@ -80,6 +80,8 @@ const mandatoryFields = [
   "allergies",
 ];
 
+
+
 function Label({ htmlFor, children, isMandatory }) {
   return (
     <label className="block text-sm font-medium mb-1" htmlFor={htmlFor}>
@@ -94,13 +96,53 @@ export default function PatientDetails() {
     const saved = localStorage.getItem(LOCAL_STORAGE_KEY);
     return saved ? JSON.parse(saved) : initialForm;
   });
+
   const [tab, setTab] = useState(0);
   const [message, setMessage] = useState("");
+  const [db, setDb] = useState(null);
+
+  useEffect(() => {
+    let mounted = true;
+    const initializeDb = async () => {
+      try {
+        const dbInstance = await getPatientsDb();
+        if (mounted) setDb(dbInstance);
+      } catch (err) {
+        console.error("Failed to initialize DB:", err);
+      }
+    };
+    initializeDb();
+    return () => { mounted = false; };
+  }, []);
 
   // Save form to localStorage on every change
   useEffect(() => {
     localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(form));
   }, [form]);
+
+
+  // Sync form state across tabs using storage event
+  useEffect(() => {
+    const handleStorage = (event) => {
+      if (event.key === LOCAL_STORAGE_KEY) {
+        if (event.newValue) {
+          const updatedForm = JSON.parse(event.newValue);
+          setForm((currentForm) => {
+            //update if data is different
+            if (JSON.stringify(currentForm) !== JSON.stringify(updatedForm)) {
+              return updatedForm;
+            }
+            return currentForm;
+          });
+        }
+      }
+    };
+    window.addEventListener("storage", handleStorage);
+    return () => {
+      window.removeEventListener("storage", handleStorage);
+    };
+  }, []);
+
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -113,31 +155,19 @@ export default function PatientDetails() {
     e.preventDefault();
     setMessage("");
 
-    // Validate only mandatory fields
+    if (!db) {
+      setMessage("Database is still loading. Please wait.");
+      return;
+    }
     for (let key of mandatoryFields) {
       if (!form[key]) {
         setMessage("Please fill all mandatory fields before submitting.");
         return;
       }
     }
-
     try {
-      const db = new PGlite("idb://patients-db", { persist: true });
-      await db.query(`
-        CREATE TABLE IF NOT EXISTS patient_full_details (
-          id SERIAL PRIMARY KEY ,
-          name TEXT, maiden TEXT, address TEXT, city TEXT, state TEXT, zip TEXT,
-          dob TEXT, ssn TEXT, phone TEXT, email TEXT, occupation TEXT, employer TEXT,
-          maritalStatus TEXT, spouse TEXT, spouseMaiden TEXT, emergencyContact TEXT,
-          emergencyRelationship TEXT, emergencyPhone TEXT, parentGuardian TEXT, parentGuardianPhone TEXT,
-          insuranceCompany TEXT, insuranceId TEXT, plan TEXT, "group" TEXT, policyHolder TEXT,
-          policyHolderDob TEXT, policyHolderEmployer TEXT, policyHolderRelationship TEXT,
-          primaryCarePhysician TEXT, pcpPhone TEXT, preferredPharmacy TEXT, pharmacyPhone TEXT,
-          reasonForVisit TEXT, medicalProblems TEXT, medications TEXT, allergies TEXT
-        );
-      `);
       await db.query(
-        `INSERT INTO patient_full_details (
+        `INSERT INTO patient_details (
           name, maiden, address, city, state, zip, dob, ssn, phone, email, occupation, employer,
           maritalStatus, spouse, spouseMaiden, emergencyContact, emergencyRelationship, emergencyPhone,
           parentGuardian, parentGuardianPhone, insuranceCompany, insuranceId, plan, "group", policyHolder,
@@ -152,13 +182,13 @@ export default function PatientDetails() {
       setMessage("Patient details saved successfully!");
       setForm(initialForm);
       setTab(0);
-      localStorage.removeItem(LOCAL_STORAGE_KEY); // Clear persisted form after submit
+      localStorage.removeItem(LOCAL_STORAGE_KEY);
     } catch (err) {
       setMessage("Error: " + err.message);
     }
   };
 
-  // Helper to decide if a field is mandatory
+
   const isMandatory = (fieldName) => mandatoryFields.includes(fieldName);
 
   return (
@@ -181,10 +211,10 @@ export default function PatientDetails() {
                 <div className="flex flex-col items-center">
                   <div
                     className={`w-9 h-9 flex items-center justify-center rounded-full border-2 shadow ${tab === idx
-                        ? "bg-[#37875b] border-[#37875b] text-white"
-                        : tab > idx
-                          ? "bg-[#6495ED] border-[#6495ED] text-white"
-                          : "bg-white border-gray-400 text-gray-500"
+                      ? "bg-[#37875b] border-[#37875b] text-white"
+                      : tab > idx
+                        ? "bg-[#6495ED] border-[#6495ED] text-white"
+                        : "bg-white border-gray-400 text-gray-500"
                       } font-bold text-lg transition`}
                   >
                     {step}
@@ -534,7 +564,7 @@ export default function PatientDetails() {
                   Next
                 </button>
               ) : (
-                <button type="submit" className="bg-[#37875b] hover:bg-[#276245] text-white px-4 py-2 rounded shadow ml-auto font-semibold">
+                <button type="submit" disabled={!db} className="bg-[#37875b] hover:bg-[#276245] text-white px-4 py-2 rounded shadow ml-auto font-semibold">
 
                   Submit
                 </button>
@@ -544,8 +574,11 @@ export default function PatientDetails() {
           </form>
         </div>
       </div>
-      {/* <UserList /> */}
       <SQLQueryPanel />
     </div>
   );
 }
+
+
+
+

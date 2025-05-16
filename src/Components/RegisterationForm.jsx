@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { PGlite } from "@electric-sql/pglite";
 import loginIllustration from '../assets/illustration_green.svg';
 import { Eye, EyeOff } from "lucide-react";
+import { getUsersDb } from "./UserDb";
 
 export default function RegistrationForm({ onSuccess }) {
   const [username, setUsername] = useState("");
@@ -13,19 +13,15 @@ export default function RegistrationForm({ onSuccess }) {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
 
+  // Use the singleton DB helper
   useEffect(() => {
+    let mounted = true;
     const initDb = async () => {
-      const dbInstance = new PGlite("idb://patients-db", { persist: true });
-      await dbInstance.query(`
-        CREATE TABLE IF NOT EXISTS patients (
-          id SERIAL PRIMARY KEY,
-          username TEXT UNIQUE NOT NULL,
-          password TEXT NOT NULL
-        );
-      `);
-      setDb(dbInstance);
+      const dbInstance = await getUsersDb();
+      if (mounted) setDb(dbInstance);
     };
     initDb();
+    return () => { mounted = false; };
   }, []);
 
   const handleSubmit = async (e) => {
@@ -36,7 +32,7 @@ export default function RegistrationForm({ onSuccess }) {
     if (!db) return;
 
     const { rows } = await db.query(
-      "SELECT * FROM patients WHERE username = $1",
+      "SELECT * FROM Users WHERE username = $1",
       [username]
     );
     if (rows.length > 0) {
@@ -45,7 +41,7 @@ export default function RegistrationForm({ onSuccess }) {
     }
 
     await db.query(
-      "INSERT INTO patients (username, password) VALUES ($1, $2)",
+      "INSERT INTO Users (username, password) VALUES ($1, $2)",
       [username, password]
     );
 

@@ -1,10 +1,8 @@
-
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { PGlite } from "@electric-sql/pglite";
 import loginIllustration from '../assets/illustration_green.svg'
 import { Eye, EyeOff } from "lucide-react";
-
+import { getUsersDb } from "./UserDb";
 
 export default function LoginForm({ onLoginSuccess }) {
   const [username, setUsername] = useState("");
@@ -13,28 +11,23 @@ export default function LoginForm({ onLoginSuccess }) {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
 
-
   useEffect(() => {
+    let mounted = true;
     const initDb = async () => {
-      const dbInstance = new PGlite("idb://patients-db", { persist: true });
-      await dbInstance.query(`
-       CREATE TABLE IF NOT EXISTS patients (
-         id SERIAL PRIMARY KEY,
-         username TEXT UNIQUE NOT NULL,
-         password TEXT NOT NULL
-       );
-     `);
-      setDb(dbInstance);
+      const dbInstance = await getUsersDb();
+      if (mounted) setDb(dbInstance);
     };
     initDb();
+    return () => { mounted = false; };
   }, []);
+
 
 
   const handleLogin = async (e) => {
     e.preventDefault();
     if (!db) return;
     const { rows } = await db.query(
-      "SELECT * FROM patients WHERE username = $1 AND password = $2",
+      "SELECT * FROM Users WHERE username = $1 AND password = $2",
       [username, password]
     );
     if (rows.length > 0) {

@@ -1,14 +1,14 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 import LoginForm from './Components/LoginForm';
 import { useState } from 'react';
-import PatientDetails from './Components/PatientDetails';
+import PatientDetails from './Components/PatientDetails';     
 import RegisterationForm from './Components/RegisterationForm';
 import Home from './Components/Layout/Home';
 import ServiceAnalytics from './Components/Layout/Services';
 import EmergencyContact from './Components/Layout/Contact';
 import ProtectedRoute from './Components/ProtectedRoute';
 
-export default function App() {
+export default function App() { 
   const [isAuthenticated, setIsAuthenticated] = useState(
     !!localStorage.getItem("isAuthenticated")
   );
@@ -29,7 +29,7 @@ export default function App() {
         path="/login"
         element={
           isAuthenticated
-            ? <Navigate to="/home/patients" replace />
+            ? <Navigate to="/home/patients" replace />  
             : <LoginForm onLoginSuccess={handleLoginSuccess} />
         }
       />
@@ -37,7 +37,7 @@ export default function App() {
         path="/register"
         element={
           isAuthenticated
-            ? <Navigate to="/home/patients" replace />
+            ? <Navigate to="/home/patients" replace /> 
             : <RegisterationForm />
         }
       />

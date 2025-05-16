@@ -2,12 +2,10 @@ import React, { useState } from "react";
 import { Link, Outlet } from "react-router-dom";
 import Footer from "./Footer";
 import CallIcon from '@mui/icons-material/Call';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import HomeIcon from '@mui/icons-material/Home';
 import PersonIcon from '@mui/icons-material/Person';
 import PodcastsIcon from '@mui/icons-material/Podcasts';
 import NotificationsIcon from '@mui/icons-material/Notifications';
-import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import SettingsIcon from '@mui/icons-material/Settings';
 import LogoutIcon from '@mui/icons-material/Logout';
 

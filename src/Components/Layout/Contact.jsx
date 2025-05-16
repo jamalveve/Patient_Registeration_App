@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-// import Emergency from  '.../assets/sos_emergency_'
 
 // Dummy data 
 const patientData = [

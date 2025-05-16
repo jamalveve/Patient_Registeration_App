@@ -8,7 +8,7 @@ export default defineConfig({
         tailwindcss(),
 
   ],
-  optimizeDeps: {
+   optimizeDeps: {
     exclude: ['@electric-sql/pglite']
   },
   assetsInclude: ['**/*.wasm'] // Ensure Vite handles WASM files
